@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import {connect } from 'react-redux';
-import {ADD_INVOICE} from '../types';
-import {withRouter} from 'react-router-dom';
+import {onAdddInvoice} from '../actions';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
@@ -26,15 +25,18 @@ class InvoiceSingleCreate extends Component {
 
 	dateHandleChange = (name, date) => {
 
+
     this.setState({
       values: {
 				...this.state.values ,
 				[name]: date
 			}
-		})
-    
+		})  
 	}
+
 	inputHandleChange = e => {
+
+
 
 		this.setState({
 			values: {
@@ -43,6 +45,15 @@ class InvoiceSingleCreate extends Component {
 			}
 		});
 
+		// this.setState(previousState => ({
+		// 	values: {
+		// 		...previousState.values ,
+		// 		[e.target.name]: e.target.value
+		// 	}
+		// }));
+
+		// выдает ошибку
+
 	}
 
 	validate = () => {
@@ -50,10 +61,10 @@ class InvoiceSingleCreate extends Component {
 		const errors = {};
 		
 	
-		if(values.invoiceNumber == ''){
+		if(values.invoiceNumber === ''){
 			errors.invoiceNumber = 'The field is required.';
 		}
-		if (values.invoiceComment == ''){
+		if (values.invoiceComment === ''){
 			errors.invoiceComment = 'The field is required.';
 		}
 		
@@ -63,18 +74,19 @@ class InvoiceSingleCreate extends Component {
 
 	formValid = () => {
 		if(!Object.keys(this.state.errors).length){
-			const invoice = {};
-
-			invoice.id = this.uniqID();
-			invoice.date_created = moment(this.state.values.invoiceDate).format('D MMMM YYYY') ;
-			invoice.date_supply = moment(this.state.values.invoiceSupplyDate).format('D MMMM YYYY');
-			invoice.comment = this.state.values.invoiceComment;
-			invoice.number = this.state.values.invoiceNumber;
-
+			const invoice = {
+				id: this.uniqID(),
+				date_created: moment(this.state.values.invoiceDate).format('D MMMM YYYY'),
+				date_supply: moment(this.state.values.invoiceSupplyDate).format('D MMMM YYYY'),
+				comment: this.state.values.invoiceComment,
+				number: this.state.values.invoiceNumber
+			};
+			
+			
 			this.props.onAdddInvoice(invoice);
 			
 			this.props.history.push('/')
-
+			
 		}
 	}
 	
@@ -83,12 +95,14 @@ class InvoiceSingleCreate extends Component {
 
 
 	uniqID =  () => {
-		return '_' + Math.random().toString(36).substr(2, 9);
+		var date = new Date();
+		var timestamp = date.getTime();
+		return timestamp;
 	};
 
 
 	render(){
-		const { values , errors } = this.state
+		const { values , errors } = this.state;
 
 		return(
 			<div className="container">
@@ -133,8 +147,6 @@ class InvoiceSingleCreate extends Component {
 										<div className="text-danger">{errors.invoiceComment}</div>
 									</div>
 								</div>
-
-
 							</div>
 							<div className="text-right mt-5">
 								<button type="button" className="btn btn-success" onClick={this.validate}>Save</button>
@@ -148,11 +160,11 @@ class InvoiceSingleCreate extends Component {
 
 }
 
-export default withRouter(connect(
+export default connect(
 	state => ({}),
   dispatch => ({
 		onAdddInvoice: (invoice) => {
-  		dispatch({type: ADD_INVOICE, payload: invoice});
+  		dispatch(onAdddInvoice(invoice));
   	}
   })
-)(InvoiceSingleCreate));
+)(InvoiceSingleCreate);

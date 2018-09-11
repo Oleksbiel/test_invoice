@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import {connect } from 'react-redux';
-import {EDIT_INVOICE} from '../types';
+import {onEditInvoice} from '../actions';
 import {withRouter} from 'react-router-dom';
 
 // компонент дублирует InvoiceSIngleCreate , можно наверное как кто использовать один и тот же но хз 
@@ -164,7 +164,7 @@ export default withRouter(connect(
 	state => ({}),
   dispatch => ({
 		onEditInvoice: (invoice) => {
-  		dispatch({type: EDIT_INVOICE, payload: invoice});
+  		dispatch(onEditInvoice(invoice));
   	}
   })
 )(InvoiceEdit));

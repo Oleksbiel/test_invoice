@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {connect } from 'react-redux';
-import {DELETE_INVOICE} from '../types';
+import {onDeleteInvoice} from '../actions';
 import Modal from 'react-modal';
 import ReactDOM from 'react-dom';
 import InvoiceEdit from './InvoiceEdit';
@@ -24,13 +24,10 @@ const customStyles = {
 
 
 class InvoiceTableItem extends Component {
-	constructor() {
-    super();
-    this.state = {
-      modalIsOpen: false
-    };
 
-  }
+	state = {
+		modalIsOpen: false
+	}
 
   openModal = () => {
     this.setState({modalIsOpen: true});
@@ -41,8 +38,6 @@ class InvoiceTableItem extends Component {
     this.setState({modalIsOpen: false});
 	}
 	
-
-
 
 	deleteItem = () => {
 		this.props.onDeleteInvoice(this.props.dataItem.id);
@@ -63,7 +58,6 @@ class InvoiceTableItem extends Component {
 					isOpen={this.state.modalIsOpen}
 					onRequestClose={this.closeModal}
 					style={customStyles}
-					contentLabel="Example Modal"
 				>
 
 					<InvoiceEdit invoice={this.props.dataItem} onCloseModal={this.closeModal}/>
@@ -78,7 +72,7 @@ export default connect(
 	state => ({}),
   dispatch => ({
 		onDeleteInvoice: (invoice) => {
-  		dispatch({type: DELETE_INVOICE, payload: invoice});
+  		dispatch(onDeleteInvoice(invoice));
   	}
   })
 )(InvoiceTableItem);
